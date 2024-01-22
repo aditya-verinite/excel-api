@@ -18,7 +18,7 @@ import com.example.demo.Service.userService;
 import com.example.demo.helper.userHelper;
 
 @RestController
-@CrossOrigin("*")
+@CrossOrigin("http://localhost:4200/")
 public class userController {
 
 	@Autowired
@@ -26,6 +26,13 @@ public class userController {
 	
 	@PostMapping("/user/upload")
 	public ResponseEntity<?> upload(@RequestParam("file")MultipartFile file){
+		
+		try {
+			Thread.sleep(1000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
 		if (userHelper.checkExcelFormat(file)) {
 			

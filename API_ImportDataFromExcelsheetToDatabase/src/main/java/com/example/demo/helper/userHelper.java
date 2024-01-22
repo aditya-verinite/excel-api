@@ -105,11 +105,15 @@ public class userHelper {
 		                }
 
 		                list.add(u);
+		                workbook.close();
 
 				
 		            }} catch (Exception exception) {
 				exception.printStackTrace();
 			}
+			
+			
+				
 			
 			return list;
 			
