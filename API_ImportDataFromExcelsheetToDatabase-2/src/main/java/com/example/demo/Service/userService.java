@@ -19,6 +19,8 @@ public class userService {
 	
 	public void save (MultipartFile file) {
 		
+//		The getInputStream() method is used to obtain 
+//				an InputStream that represents the contents of the uploaded file.
 		
 		try{
 		List<user> user = 	userHelper.convertToList(file.getInputStream());

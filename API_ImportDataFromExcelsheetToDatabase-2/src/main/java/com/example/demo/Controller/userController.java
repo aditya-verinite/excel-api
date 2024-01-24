@@ -27,6 +27,8 @@ public class userController {
 	@PostMapping("/user/upload")
 	public ResponseEntity<?> upload(@RequestParam("file")MultipartFile file){
 		
+		//delay given only to testing uploading message in frontend 
+		
 		try {
 			Thread.sleep(1000);
 		} catch (InterruptedException e) {
@@ -51,3 +53,23 @@ public class userController {
 		return this.userService.getAllUSers();
 	}
 }
+
+
+
+
+
+
+
+
+
+//
+//
+//@RequestParam("file"):
+//
+//@RequestParam is used to extract the value of the "file" parameter from the request.
+//The parameter value is expected to be part of the request URL (query parameter) or submitted as part of a form.
+//In this case, it is used to extract the uploaded file from a form submission where the input field name is "file."
+//MultipartFile file:
+//
+//The extracted parameter value (in this case, the uploaded file) is then bound to the method parameter file of type MultipartFile.
+//MultipartFile is a Spring interface representing a file received in a multipart request. It provides methods to access information about the file, such as its name, size, content type, and the actual file content.
