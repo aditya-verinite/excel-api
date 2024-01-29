@@ -1,5 +1,8 @@
 package com.example.demo.helper;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.time.LocalDate;
 import java.time.ZoneId;
@@ -13,6 +16,8 @@ import com.example.demo.Entity.user;
 
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
@@ -41,12 +46,15 @@ public class userHelper {
 		
 		public static List<user> convertToList(InputStream input){ 
 			
+//			InputStream is an abstract class that serves as the superclass of all classes representing an input stream 
+//			of bytes. It is used for reading data from a source one byte at a time.
+//			
 			List <user> list = new ArrayList<>();
 			
 			try {
 				
 				
-				// here workbook is whole excel 
+				// here workbook is whole excel file 
 				 XSSFWorkbook workbook = new XSSFWorkbook(input);
 				 
 				 // getting the particular sheet from excel (excel contains number of sheets) 
@@ -119,5 +127,78 @@ public class userHelper {
 			
 			
 		}
+		
+		
+		public static String[] HEADER = {
+				
+				"ContactNumber",
+				"AccountNumber",
+				"AccountType",
+				"DebitCardNumber",
+				"ExpiryDate",
+				"UserName"
+				
+		};
+		
+		public static String SHEET_NAME="users_data";
+		
+		
+		public static ByteArrayInputStream dataToExcel(List<user> list) throws IOException {
+			Workbook workbook = new XSSFWorkbook();
+			 ByteArrayOutputStream out = new ByteArrayOutputStream();
+			
+			
+			try {
+				 
+				 Sheet sheet = workbook.createSheet(SHEET_NAME);
+				 
+				 // creating excel sheet header row
+				 Row row = sheet.createRow(0);
+				 
+				 for (int i =0; i<HEADER.length;i++) {
+					 Cell cell = row.createCell(i);
+					 cell.setCellValue(HEADER[i]);
+				 }
+				 
+				 //creating value rows
+				 int rowIndex = 1;
+				 for (user u:list){
+					 Row dataRow = sheet.createRow(rowIndex);
+					 
+					 rowIndex++;
+					 
+					 dataRow.createCell(0).setCellValue(u.getContactNo());
+					 dataRow.createCell(1).setCellValue(u.getAccountNo());
+					 dataRow.createCell(2).setCellValue(u.getAccountType());
+					 dataRow.createCell(3).setCellValue(u.getDebitCardNo());
+					 dataRow.createCell(4).setCellValue(u.getExpiryDate());
+					 dataRow.createCell(5).setCellValue(u.getUserName());
+				 }
+				 
+				 workbook.write(out);
+			
+				 return new ByteArrayInputStream(out.toByteArray());
+				 
+//toByteArray() creates and returns a new byte array containing a copy of the data currently held in the stream.
+					
+			}catch(IOException e){
+				
+				e.printStackTrace();
+				return null;}
+			
+//			}finally {
+//				
+//				
+//				
+//					workbook.close();
+//				
+//					out.close();
+//				
+//			}
+//	
+		}
+			
+			
+		
 
 }

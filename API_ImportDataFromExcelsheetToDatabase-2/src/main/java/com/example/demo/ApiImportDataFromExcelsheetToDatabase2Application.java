@@ -4,10 +4,10 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class ApiImportDataFromExcelsheetToDatabaseApplication {
+public class ApiImportDataFromExcelsheetToDatabase2Application {
 
 	public static void main(String[] args) {
-		SpringApplication.run(ApiImportDataFromExcelsheetToDatabaseApplication.class, args);
+		SpringApplication.run(ApiImportDataFromExcelsheetToDatabase2Application.class, args);
 	}
 
 }
