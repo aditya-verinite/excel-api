@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.InputStreamResource;
+import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -17,8 +19,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.core.io.InputStreamResource;
-import org.springframework.core.io.Resource;
 
 import com.example.demo.Entity.user;
 import com.example.demo.Service.userService;
@@ -30,75 +30,69 @@ public class userController {
 
 	@Autowired
 	private userService userService;
-	
+
 	@PostMapping("/user/upload")
-	public ResponseEntity<?> upload(@RequestParam("file")MultipartFile file){
-		
-		//delay given only to testing uploading message in frontend 
-		
+	public ResponseEntity<?> upload(@RequestParam("file") MultipartFile file) {
+
+		// delay given only to testing uploading message in frontend
+
 		try {
+			// Delay given only for testing uploading message in the frontend
 			Thread.sleep(1000);
+
+			if (userHelper.checkExcelFormat(file)) {
+				this.userService.save(file);
+				return ResponseEntity.ok(Map.of("message", "File is uploaded"));
+			}
+
 		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
+
+		} catch (RuntimeException e) {
+			System.out.println("Exception Reached Controller " + e);
+			// e.printStackTrace();
+			// Pass the IllegalArgumentException to the frontend
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
 		}
-		
-		if (userHelper.checkExcelFormat(file)) {
-			
-			this.userService.save(file);
-			
-			return ResponseEntity.ok(Map.of("message","file is uploaded"));
-			
-		}
-		
+
 		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid File Format");
-		
-		
 	}
-	
+
 	@CrossOrigin("http://localhost:4200/")
 	@GetMapping("/user")
-	public List<user> getAllUsers(){
+	public List<user> getAllUsers() {
 		return this.userService.getAllUSers();
 	}
-	
-	
-	
+
 	@CrossOrigin("http://localhost:4200/")
-	@RequestMapping("/excel") 
-	public ResponseEntity<Resource> download() throws IOException{
-		
-		
+	@RequestMapping("/excel")
+	public ResponseEntity<Resource> download() throws IOException {
+
 		String filename = "users.xlsx";
-		
-		//  Retrieve user data as an InputStream
+
+		// Retrieve user data as an InputStream
 		ByteArrayInputStream byteArrayInputStream = userService.getData();
-		
-		
-		// Wrap the InputStream in an InputStreamResource . 
-		//This is done to create a Resource object that can be used in the ResponseEntity
+
+		// Wrap the InputStream in an InputStreamResource.
+		// This is done to create a Resource object that can be used in the
+		// ResponseEntity
+
 		InputStreamResource file = new InputStreamResource(byteArrayInputStream);
-		
-		return (ResponseEntity.ok().header(HttpHeaders.CONTENT_DISPOSITION,"attachment; filename = "+filename)
-		.contentType(MediaType.parseMediaType("application/vnd.ms-excel")).body(file));
-		
-		
-		// Content-Disposition header is used to suggest a default filename for the downloaded file.
-		// it suggests that the browser should treat the response as an attachment (attachment;) and provides the suggested filename (filename=users.xlsx).
+
+		return (ResponseEntity.ok().header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename = " + filename)
+				.contentType(MediaType.parseMediaType("application/vnd.ms-excel")).body(file));
+
+		// Content-Disposition header is used to suggest a default filename for the
+		// downloaded file.
+		// it suggests that the browser should treat the response as an attachment
+		// (attachment;) and provides the suggested filename (filename=users.xlsx).
 		// Content-Type header specifies the media type of the resource being sent.
-		// In this case, it specifies that the content is of type "application/vnd.ms-excel," indicating that the response contains Excel file data.
-		
-	
-	
+		// In this case, it specifies that the content is of type
+		// "application/vnd.ms-excel," indicating that the response contains Excel file
+		// data.
+
 	}
 }
-
-
-
-
-
-
-
 
 //@RequestParam("file"):
 //

@@ -19,25 +19,24 @@ public class userService {
 	@Autowired
 	private userRepository userRepository;
 	
-	public void save (MultipartFile file) {
-		
-//		The getInputStream() method is used to obtain 
-//				an InputStream that represents the contents of the uploaded file.
+		public void save(MultipartFile file) throws RuntimeException {
+			
+			
+//	The getInputStream() method is used to obtain an InputStream that represents the contents of the uploaded file.
+//			getInputStream() method is commonly used in Spring to access the raw byte stream of the uploaded file
+	        try {
+	            List<user> userList = userHelper.convertToList(file.getInputStream());
+	            this.userRepository.saveAll(userList);
+	        } catch (IOException e) {
+	            e.printStackTrace(); 
+	       	
+	        }catch (RuntimeException exception) {
+	            System.out.println(exception);
+	            throw exception;
+	            
+	        }
+	    }
 
-//		getInputStream() method is commonly used in Spring to access the raw byte stream of the uploaded file
-		
-		try{
-		List<user> user = 	userHelper.convertToList(file.getInputStream());
-		this.userRepository.saveAll(user);
-		
-		}catch(IOException e){
-			
-			e.printStackTrace();
-			
-			
-		}
-	}
-	
 	public List<user> getAllUSers (){
 		return this.userRepository.findAll();
 	}
